@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Officer & Admin Portal | Student Online Complaint Registration and Tracking System</title>
+  
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Bootstrap 5.3 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <!-- Custom Modern Stylesheets -->
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="bg-light">
+
+  <!-- Admin Top Navigation Bar (Clean White like Student Portal) -->
+  <nav class="navbar navbar-expand-lg navbar-custom sticky-top py-3">
+    <div class="container-fluid px-lg-4">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="/admin.html">
+        <div class="brand-icon bg-primary text-white">
+          <i class="bi bi-shield-lock-fill"></i>
+        </div>
+        <div class="d-flex flex-column">
+          <span style="font-size: 1.15rem; line-height: 1.1; color: var(--dark-slate); font-weight: 800;">
+            Resolve<span class="text-primary">Track</span> <span class="badge bg-primary text-white ms-1" style="font-size: 0.7rem;">Officer Control</span>
+          </span>
+          <small class="text-muted" style="font-size: 0.65rem; font-weight: 600; letter-spacing: 0.04em;">KARUNYA GRIEVANCE CELL</small>
+        </div>
+      </a>
+
+      <div class="d-flex align-items-center gap-2 ms-auto">
+        <!-- Return to Home option -->
+        <a href="/" class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-1" id="adminReturnHomeBtn">
+          <i class="bi bi-house"></i> Return Home
+        </a>
+        <!-- Prominent Logout Button (Only visible after authenticated login) -->
+        <button type="button" class="btn btn-sm btn-danger px-3 fw-bold align-items-center gap-1 d-none" id="adminLogoutBtn" style="display: none !important;">
+          <i class="bi bi-box-arrow-right"></i> Sign Out
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <main class="py-4">
+    <div class="container-fluid px-lg-4">
+
+      <!-- ===================================================================
+           VIEW 1: ADMIN & OFFICER LOGIN SCREEN (When not authenticated)
+           =================================================================== -->
+      <section id="adminAuthSection" style="display: block;">
+        <div class="row justify-content-center py-5">
+          <div class="col-md-6 col-lg-4">
+            <div class="card card-modern p-4 p-md-5 border-0 shadow-lg">
+              <div class="text-center mb-4">
+                <div class="brand-icon bg-primary mx-auto mb-3" style="width: 54px; height: 54px; font-size: 1.5rem;">
+                  <i class="bi bi-lock-fill"></i>
+                </div>
+                <h4 class="fw-bold text-dark">Staff & Officer Login</h4>
+                <p class="text-muted small">Karunya Grievance Redressal & Student Affairs</p>
+              </div>
+
+              <form id="adminLoginForm">
+                <div class="mb-3">
+                  <label for="adminUsername" class="form-label small fw-bold">Official Email / Username</label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-white"><i class="bi bi-envelope-at"></i></span>
+                    <input type="text" id="adminUsername" class="form-control" placeholder="admin@karunya.edu.in" required>
+                  </div>
+                </div>
+
+                <div class="mb-4">
+                  <label for="adminPassword" class="form-label small fw-bold">Password</label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-white"><i class="bi bi-key"></i></span>
+                    <input type="password" id="adminPassword" class="form-control" placeholder="••••••••" required>
+                  </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary-custom w-100 py-2 fs-6" id="loginSubmitBtn">
+                  <i class="bi bi-box-arrow-in-right me-2"></i> Log In to Dashboard
+                </button>
+              </form>
+
+              <!-- Return to Home Link -->
+              <div class="text-center mt-3">
+                <a href="/" class="text-decoration-none small text-muted"><i class="bi bi-arrow-left me-1"></i> Return to Home Page</a>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           VIEW 2: ADMIN & OFFICER DASHBOARD (When authenticated)
+           =================================================================== -->
+      <section id="adminDashboardSection" style="display: none;">
+        
+        <!-- Officer Info Banner -->
+        <div class="d-flex flex-wrap justify-content-between align-items-center bg-white p-3 rounded-3 border mb-4 shadow-sm">
+          <div class="d-flex align-items-center gap-3">
+            <div class="brand-icon bg-primary text-white" style="width: 46px; height: 46px;">
+              <i class="bi bi-person-check-fill"></i>
+            </div>
+            <div>
+              <h5 class="fw-bold mb-0 text-dark" id="adminNameDisplay">Administrator</h5>
+              <small class="text-muted" id="adminRoleDisplay">SuperAdmin • Karunya Grievance Cell</small>
+            </div>
+          </div>
+          <div class="d-flex align-items-center gap-2 mt-2 mt-md-0">
+            <a href="/download-credentials-pdf" target="_blank" class="btn btn-outline-danger btn-sm d-flex align-items-center gap-1" id="downloadPdfHeaderBtn">
+              <i class="bi bi-file-earmark-pdf-fill"></i> Download Credentials PDF (200 Students)
+            </a>
+            <button type="button" class="btn btn-outline-success btn-sm d-flex align-items-center gap-1" id="exportCsvBtn">
+              <i class="bi bi-file-earmark-spreadsheet"></i> Export CSV
+            </button>
+            <button type="button" class="btn btn-danger btn-sm d-flex align-items-center gap-1" id="bannerLogoutBtn">
+              <i class="bi bi-box-arrow-right"></i> Sign Out
+            </button>
+          </div>
+        </div>
+
+        <!-- Portal Navigation Tabs: Grievances vs Student Management -->
+        <ul class="nav nav-pills mb-4 gap-2" id="adminTabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active fw-bold px-4" id="tab-grievances" data-bs-toggle="pill" data-bs-target="#paneGrievances" type="button" role="tab">
+              <i class="bi bi-inbox-fill me-1"></i> Grievances & Redressal
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link fw-bold px-4" id="tab-students" data-bs-toggle="pill" data-bs-target="#paneStudents" type="button" role="tab">
+              <i class="bi bi-people-fill me-1"></i> Student Management (URK24CS1001 - URK24CS1200)
+            </button>
+          </li>
+        </ul>
+
+        <div class="tab-content" id="adminTabsContent">
+
+          <!-- TAB 1: GRIEVANCES OVERVIEW & ANALYTICS -->
+          <div class="tab-pane fade show active" id="paneGrievances" role="tabpanel">
+            
+            <!-- Metric KPI Cards -->
+            <div class="row g-3 mb-4">
+              <div class="col-6 col-md-4 col-xl-2">
+                <div class="admin-stat-card card-primary">
+                  <div>
+                    <small class="text-muted fw-bold text-uppercase" style="font-size: 0.725rem;">Total Cases</small>
+                    <h3 class="fw-bold mb-0 text-dark" id="metricTotal">0</h3>
+                  </div>
+                  <div class="stat-icon-box bg-primary-subtle text-primary">
+                    <i class="bi bi-folder2-open"></i>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6 col-md-4 col-xl-2">
+                <div class="admin-stat-card card-warning">
+                  <div>
+                    <small class="text-muted fw-bold text-uppercase" style="font-size: 0.725rem;">Pending</small>
+                    <h3 class="fw-bold mb-0 text-warning" id="metricPending">0</h3>
+                  </div>
+                  <div class="stat-icon-box bg-warning-subtle text-warning">
+                    <i class="bi bi-hourglass-split"></i>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6 col-md-4 col-xl-2">
+                <div class="admin-stat-card card-info">
+                  <div>
+                    <small class="text-muted fw-bold text-uppercase" style="font-size: 0.725rem;">Under Review</small>
+                    <h3 class="fw-bold mb-0 text-info" id="metricReview">0</h3>
+                  </div>
+                  <div class="stat-icon-box bg-info-subtle text-info">
+                    <i class="bi bi-search"></i>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6 col-md-4 col-xl-2">
+                <div class="admin-stat-card card-primary">
+                  <div>
+                    <small class="text-muted fw-bold text-uppercase" style="font-size: 0.725rem;">In Progress</small>
+                    <h3 class="fw-bold mb-0 text-primary" id="metricInProgress">0</h3>
+                  </div>
+                  <div class="stat-icon-box bg-primary-subtle text-primary">
+                    <i class="bi bi-gear-wide-connected"></i>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6 col-md-4 col-xl-2">
+                <div class="admin-stat-card card-success">
+                  <div>
+                    <small class="text-muted fw-bold text-uppercase" style="font-size: 0.725rem;">Resolved</small>
+                    <h3 class="fw-bold mb-0 text-success" id="metricResolved">0</h3>
+                  </div>
+                  <div class="stat-icon-box bg-success-subtle text-success">
+                    <i class="bi bi-check2-circle"></i>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6 col-md-4 col-xl-2">
+                <div class="admin-stat-card card-danger">
+                  <div>
+                    <small class="text-muted fw-bold text-uppercase" style="font-size: 0.725rem;">Avg Resolution</small>
+                    <h3 class="fw-bold mb-0 text-dark" id="metricAvgTime">0 hrs</h3>
+                  </div>
+                  <div class="stat-icon-box bg-danger-subtle text-danger">
+                    <i class="bi bi-speedometer2"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="row g-4 mb-4">
+              <div class="col-lg-6">
+                <div class="chart-card">
+                  <h6 class="fw-bold text-dark mb-3"><i class="bi bi-pie-chart text-primary me-2"></i>Complaints by Department / Category</h6>
+                  <div class="chart-container">
+                    <canvas id="categoryChart"></canvas>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-6">
+                <div class="chart-card">
+                  <h6 class="fw-bold text-dark mb-3"><i class="bi bi-bar-chart-steps text-info me-2"></i>Complaints by Urgency & Priority Level</h6>
+                  <div class="chart-container">
+                    <canvas id="priorityChart"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Complaints Table with Filter Bar -->
+            <div class="card card-modern border-0 shadow-sm p-4">
+              <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+                <div>
+                  <h5 class="fw-bold text-dark mb-1">Central Grievance Redressal Records</h5>
+                  <small class="text-muted">Manage complaints, assign officers, and submit resolution notices</small>
+                </div>
+              </div>
+
+              <!-- Filters Row -->
+              <div class="row g-2 mb-3">
+                <div class="col-md-5">
+                  <div class="input-group">
+                    <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                    <input type="text" id="adminFilterSearch" class="form-control" placeholder="Search by Ticket ID, Title, or Complainant...">
+                  </div>
+                </div>
+
+                <div class="col-md-3">
+                  <select id="adminFilterStatus" class="form-select">
+                    <option value="All" selected>All Statuses</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Under Review">Under Review</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Resolved">Resolved</option>
+                    <option value="Rejected">Rejected</option>
+                  </select>
+                </div>
+
+                <div class="col-md-4">
+                  <select id="adminFilterCategory" class="form-select">
+                    <option value="All" selected>All Departments / Categories</option>
+                    <option value="Infrastructure">Infrastructure</option>
+                    <option value="Academic">Academic</option>
+                    <option value="Hostel">Hostel</option>
+                    <option value="IT & Network">IT & Network</option>
+                    <option value="Sanitation">Sanitation</option>
+                    <option value="Transport">Transport</option>
+                    <option value="Administrative">Administrative</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Data Table -->
+              <div class="table-responsive">
+                <table class="table table-modern align-middle mb-0">
+                  <thead>
+                    <tr>
+                      <th>Ticket ID</th>
+                      <th>Grievance Subject</th>
+                      <th>Category</th>
+                      <th>Priority</th>
+                      <th>Status</th>
+                      <th>Complainant</th>
+                      <th>Submission Date</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="adminComplaintsTable">
+                    <tr>
+                      <td colspan="8" class="text-center py-4">Loading complaints...</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- TAB 2: STUDENT MANAGEMENT (URK24CS1001 to URK24CS1200) -->
+          <div class="tab-pane fade" id="paneStudents" role="tabpanel">
+            <div class="card card-modern border-0 shadow-sm p-4">
+              
+              <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3 border-bottom pb-3">
+                <div>
+                  <h5 class="fw-bold text-dark mb-1">
+                    <i class="bi bi-people-fill text-primary me-2"></i>Enrolled Student Directory (200 Students Seeded)
+                  </h5>
+                  <small class="text-muted">Register Numbers: URK24CS1001 to URK24CS1200 &bull; Initial Password: Date of Birth</small>
+                </div>
+
+                <div class="d-flex gap-2">
+                  <a href="/download-credentials-pdf" target="_blank" class="btn btn-danger btn-sm d-flex align-items-center gap-1">
+                    <i class="bi bi-file-earmark-pdf-fill"></i> Download Credentials PDF
+                  </a>
+                  <button type="button" class="btn btn-primary-custom btn-sm" data-bs-toggle="modal" data-bs-target="#addStudentModal">
+                    <i class="bi bi-person-plus-fill me-1"></i> Add Student
+                  </button>
+                </div>
+              </div>
+
+              <!-- Student Filter Search -->
+              <div class="row g-2 mb-3">
+                <div class="col-md-6">
+                  <div class="input-group">
+                    <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                    <input type="text" id="studentSearchInput" class="form-control" placeholder="Search by Register Number (e.g. URK24CS1001) or Name...">
+                  </div>
+                </div>
+                <div class="col-md-6 text-md-end text-muted small align-self-center">
+                  Total Enrolled Students: <strong class="text-dark" id="studentTotalCount">200</strong>
+                </div>
+              </div>
+
+              <!-- Students Table -->
+              <div class="table-responsive">
+                <table class="table table-modern align-middle mb-0">
+                  <thead>
+                    <tr>
+                      <th>Register No</th>
+                      <th>Student Name</th>
+                      <th>Karunya Email</th>
+                      <th>DOB (Password)</th>
+                      <th>Department</th>
+                      <th>Contact Phone</th>
+                      <th>Enrolled By</th>
+                    </tr>
+                  </thead>
+                  <tbody id="adminStudentsTable">
+                    <tr>
+                      <td colspan="7" class="text-center py-4">Loading student directory...</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ===================================================================
+       ADD STUDENT MODAL (Officer / Admin tool)
+       =================================================================== -->
+  <div class="modal fade" id="addStudentModal" tabindex="-1" aria-labelledby="addStudentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4 border-0 shadow-xl">
+        <div class="modal-header bg-primary text-white p-3">
+          <h5 class="modal-title fw-bold" id="addStudentModalLabel">
+            <i class="bi bi-person-plus-fill me-2"></i>Enroll New Student to Portal
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <form id="addStudentForm">
+          <div class="modal-body p-4">
+            <div class="mb-3">
+              <label for="newRegNo" class="form-label small fw-bold">Register Number <span class="text-danger">*</span></label>
+              <input type="text" id="newRegNo" class="form-control text-uppercase font-monospace" placeholder="e.g. URK24CS1201" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="newName" class="form-label small fw-bold">Student Full Name <span class="text-danger">*</span></label>
+              <input type="text" id="newName" class="form-control" placeholder="e.g. Joshua Philip" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="newEmail" class="form-label small fw-bold">Karunya Email <span class="text-danger">*</span></label>
+              <input type="email" id="newEmail" class="form-control" placeholder="e.g. urk24cs1201@karunya.edu.in" required>
+            </div>
+
+            <div class="row g-2 mb-3">
+              <div class="col-md-6">
+                <label for="newDob" class="form-label small fw-bold">Date of Birth (Login Password) <span class="text-danger">*</span></label>
+                <input type="text" id="newDob" class="form-control" placeholder="DD-MM-YYYY (e.g. 15-08-2006)" required>
+              </div>
+              <div class="col-md-6">
+                <label for="newPhone" class="form-label small fw-bold">Mobile Number</label>
+                <input type="tel" id="newPhone" class="form-control" placeholder="9840100000" maxlength="10">
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="newDept" class="form-label small fw-bold">Department</label>
+              <select id="newDept" class="form-select">
+                <option value="Computer Science and Engineering" selected>Computer Science and Engineering</option>
+                <option value="Information Technology">Information Technology</option>
+                <option value="Electronics and Communication">Electronics and Communication</option>
+                <option value="Mechanical Engineering">Mechanical Engineering</option>
+                <option value="Civil Engineering">Civil Engineering</option>
+              </select>
+            </div>
+
+            <div class="alert alert-info small py-2 mb-0">
+              <i class="bi bi-info-circle me-1"></i> The student's initial password will automatically be their Date of Birth.
+            </div>
+          </div>
+
+          <div class="modal-footer bg-light p-3">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary-custom" id="saveStudentBtn">
+              <i class="bi bi-check2-circle me-1"></i> Save & Enroll Student
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================
+       UPDATE STATUS & OFFICER ASSIGNMENT MODAL
+       =================================================================== -->
+  <div class="modal fade" id="updateStatusModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4 border-0 shadow-xl">
+        <div class="modal-header bg-primary text-white p-3">
+          <h5 class="modal-title fw-bold text-white" id="updateModalLabel">
+            <i class="bi bi-pencil-square me-2"></i>Update Grievance Action
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <form id="updateStatusForm">
+          <div class="modal-body p-4">
+            <input type="hidden" id="updateComplaintId">
+
+            <div class="mb-3">
+              <span class="badge bg-primary font-monospace fs-6 px-2 py-1 mb-1" id="modalTicketBadge">CMP-XXXX</span>
+              <h6 class="fw-bold text-dark mb-0" id="modalComplaintTitle">Title of Complaint</h6>
+            </div>
+
+            <div class="mb-3">
+              <label for="updateStatusSelect" class="form-label small fw-bold">Case Status <span class="text-danger">*</span></label>
+              <select id="updateStatusSelect" class="form-select" required>
+                <option value="Pending">Pending</option>
+                <option value="Under Review">Under Review</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Resolved">Resolved</option>
+                <option value="Rejected">Rejected</option>
+              </select>
+            </div>
+
+            <div class="row g-2 mb-3">
+              <div class="col-md-6">
+                <label for="updateOfficerName" class="form-label small fw-bold">Assigned Officer / Lead</label>
+                <input type="text" id="updateOfficerName" class="form-control" placeholder="e.g. Officer Student Affairs">
+              </div>
+
+              <div class="col-md-6">
+                <label for="updateDepartment" class="form-label small fw-bold">Department</label>
+                <input type="text" id="updateDepartment" class="form-control" placeholder="e.g. Student Affairs">
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="updateNote" class="form-label small fw-bold">Progress Timeline Note</label>
+              <input type="text" id="updateNote" class="form-control" placeholder="e.g. Inspection completed; scheduled maintenance...">
+              <small class="text-muted" style="font-size: 0.75rem;">This note will appear in the public tracking timeline.</small>
+            </div>
+
+            <!-- Resolution / Rejection Remarks (Appears when Resolved or Rejected) -->
+            <div class="mb-3" id="remarksContainer" style="display: none;">
+              <label for="updateRemarks" class="form-label small fw-bold text-success">
+                Official Resolution / Closure Remarks <span class="text-danger">*</span>
+              </label>
+              <textarea id="updateRemarks" class="form-control" rows="3" placeholder="Detail the corrective actions taken, replaced parts, or reason for closure..."></textarea>
+            </div>
+          </div>
+
+          <div class="modal-footer bg-light p-3">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary-custom" id="saveStatusBtn">
+              <i class="bi bi-check2-circle me-1"></i> Save Changes
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer-custom mt-5">
+    <div class="container text-center small text-muted">
+      &copy; 2026 Student Online Complaint Registration and Tracking System. Karunya Institute of Technology and Sciences.
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Chart.js 4.4.1 -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <!-- Core Main Script -->
+  <script src="/js/main.js"></script>
+  <!-- Admin Script -->
+  <script src="/js/admin.js"></script>
+</body>
+</html>
